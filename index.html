@@ -147,3 +147,161 @@
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Perfil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .message {
+            text-align: center;
+            color: green;
+        }
+        .coins {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 16px;
+            color: #4CAF50;
+        }
+        .profile-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .profile-container input {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .profile-container button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .profile-container button:hover {
+            background-color: #45a049;
+        }
+        .logout {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .logout img {
+            width: 30px;
+            cursor: pointer;
+        }
+        .video-container, .profile-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="coins" id="coins-display">Moedas: 50</div>
+
+<div class="container">
+    <h1>Bem-vindo ao seu perfil!</h1>
+    <div class="message" id="profile-message"></div>
+    
+    <div class="profile-container">
+        <h3>Adicionar link do TikTok</h3>
+        <input type="text" id="tiktok-link" placeholder="Cole seu link do TikTok" disabled />
+        <button id="add-link-btn" onclick="addLink()" disabled>Adicionar Link</button>
+    </div>
+
+    <div class="video-container">
+        <h3>Assistir vídeo ou seguir perfil</h3>
+        <input type="text" id="watch-link" placeholder="Cole o link do vídeo ou perfil" />
+        <button onclick="watchLink()">Assistir</button>
+    </div>
+
+    <div class="logout">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Logout_icon_2.svg" alt="Logout" onclick="logout()" />
+    </div>
+</div>
+
+<script>
+    let coins = 50; // Moedas iniciais de bônus
+    let username = localStorage.getItem("currentUser");
+    let userData = JSON.parse(localStorage.getItem(username));
+
+    // Exibe o saldo de moedas
+    function updateCoins() {
+        document.getElementById("coins-display").innerText = `Moedas: ${coins}`;
+    }
+
+    // Inicializa a página
+    function showProfile() {
+        if (!username) {
+            window.location.href = "index.html"; // Redireciona para login caso o usuário não esteja logado
+        }
+        document.getElementById("profile-message").innerText = `Olá, ${username}! Seu saldo de moedas é: ${coins}`;
+        updateCoins();
+
+        // Habilita a opção de adicionar link apenas se o usuário tiver 50 moedas
+        if (coins >= 50) {
+            document.getElementById("tiktok-link").disabled = false;
+            document.getElementById("add-link-btn").disabled = false;
+        }
+    }
+
+    // Função para adicionar o link
+    function addLink() {
+        let tiktokLink = document.getElementById("tiktok-link").value;
+        if (tiktokLink) {
+            userData.tiktokLink = tiktokLink;
+            localStorage.setItem(username, JSON.stringify(userData));
+            alert("Link do TikTok adicionado com sucesso!");
+        } else {
+            alert("Por favor, insira um link válido.");
+        }
+    }
+
+    // Função para assistir ao vídeo ou seguir perfil
+    function watchLink() {
+        let link = document.getElementById("watch-link").value;
+        if (link) {
+            alert("Você assistiu ao vídeo e ganhou 10 moedas!");
+            coins += 10;
+            updateCoins();
+        } else {
+            alert("Por favor, cole um link válido.");
+        }
+    }
+
+    // Função de logout
+    function logout() {
+        localStorage.removeItem("currentUser");
+        window.location.href = "index.html"; // Redireciona para o login após o logout
+    }
+
+    // Carrega a página do perfil ao abrir
+    window.onload = showProfile;
+</script>
+
+</body>
+</html>
